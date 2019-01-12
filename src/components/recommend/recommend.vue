@@ -33,7 +33,7 @@
 <script>
   import {getRecommend, getDiscList} from "api/recommend";
   import {ERR_OK} from "api/config";
-  import Slider from "base/slider/slider";
+  import Slider from "base/slide/slide";
   import Scroll from "base/scroll/scroll";
 
   export default {
