@@ -11,21 +11,54 @@
         </ul>
       </li>
     </ul>
+    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart"
+         @touchmove.stop.prevent="onShortcutTouchMove"
+         @touchend.stop>
+      <ul>
+        <li v-for="(item,index) in shortcutList" class="item" :key="index">
+          {{item}}
+        </li>
+      </ul>
+    </div>
+    <div v-show="!data.length" class="loading-container">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 
 <script>
   import Scroll from "base/scroll/scroll";
+  import Loading from "./loading";
+  import {getData} from 'common/js/dom'
 
   export default {
     name: "listview",
-    components: {Scroll},
+    components: {Loading, Scroll},
     props: {
       data: {
         type: Array,
-        default: []
+        default() {
+          return []
+        }
       }
     },
+    methods: {
+      onShortcutTouchStart(e) {
+        let anchorIndex = getData(e.target, 'index')
+        let firstTouch = e.touches[0]
+        this.touch.y1 = firstTouch.pageY
+        this.touch.anchorIndex = anchorIndex
+
+        this._scrollTo(anchorIndex)
+      }
+    },
+    computed: {
+      shortcutList() {
+        return this.data.map((group) => {
+          return group.title.substr(0, 1)
+        })
+      }
+    }
   }
 </script>
 
@@ -41,22 +74,58 @@
     .list-group
       padding-bottom 30px
       .list-group-title
-        height:30px
-        line-height:30px
-        padding-left:20px
+        height: 30px
+        line-height: 30px
+        padding-left: 20px
         font-size $font-size-small
         color: $color-text-l
         background $color-highlight-background
       .list-group-item
         display: flex
         align-items center
-        padding:20px 0 0 30px
+        padding: 20px 0 0 30px
         .avatar
-          width:50px
-          height:50px
+          width: 50px
+          height: 50px
           border-radius 50%
         .name
           margin-left 20px
           color: $color-text-l
           font-size: $font-size-medium
+    .list-shortcut
+      position: absolute
+      z-index: 30
+      right: 0
+      top: 50%
+      transform: translateY(-50%)
+      width: 20px
+      padding: 20px 0
+      border-radius: 10px
+      text-align: center
+      background: $color-background-d
+      font-family: Helvetica
+      .item
+        padding: 3px
+        line-height: 1
+        color: $color-text-l
+        font-size: $font-size-small
+        &.current
+          color: $color-theme
+    .list-fixed
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      .fixed-title
+        height: 30px
+        line-height: 30px
+        padding-left: 20px
+        font-size: $font-size-small
+        color: $color-text-l
+        background: $color-highlight-background
+    .loading-container
+      position: absolute
+      width: 100%
+      top: 50%
+      transform: translateY(-50%)
 </style>
