@@ -22,7 +22,14 @@ export default new Router({
     {
       path: '/singer',
       name: 'singer',
-      component: () => import( 'components/singer/singer.vue')
+      component: () => import( 'components/singer/singer.vue'),
+      children :[
+        {
+          path:':id',
+          name:'singer-detail',
+          component: () => import( 'components/singer-detail/singer-detail.vue')
+        }
+      ]
     },
     {
       path: '/search',
