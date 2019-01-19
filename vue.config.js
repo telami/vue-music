@@ -12,6 +12,7 @@ module.exports = {
       .set('common', resolve('src/common'))
       .set('api', resolve('src/api'))
       .set('base', resolve('src/base'))
+      .set('store', resolve('src/store'))
   },
   devServer: {
     before(app) {
