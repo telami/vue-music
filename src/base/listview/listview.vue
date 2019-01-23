@@ -42,7 +42,7 @@
 
 <script>
   import Scroll from "base/scroll/scroll";
-  import Loading from "./loading";
+  import Loading from "../loading/loading";
   import {getData} from 'common/js/dom'
 
   const TITLE_HEIGHT = 30
