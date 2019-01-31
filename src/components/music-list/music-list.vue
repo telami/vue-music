@@ -7,7 +7,14 @@
     <div class="bg-image" :style="bgStyle" ref="bgImage">
       <div class="filter"></div>
     </div>
-    <scroll :data="songs" class="list" ref="list">
+    <div class="bg-layer" ref="layer"></div>
+    <scroll :probe-type="probeType"
+            :listen-scroll="listenScroll"
+            :data="songs"
+            class="list"
+            ref="list"
+            @scroll="scroll"
+    >
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
       </div>
@@ -22,6 +29,10 @@
   import Scroll from "base/scroll/scroll";
   import SongList from "base/song-list/song-list";
   import Loading from "../../base/loading/loading";
+
+  const RESERVED_HEIGHT = 40
+  const ZERO = 0
+
   export default {
     name: "music-list",
     components: {Loading, SongList, Scroll},
@@ -41,17 +52,48 @@
         default: ''
       }
     },
+    data() {
+      return {
+        scrollY: 0
+      }
+    },
     computed: {
       bgStyle() {
         return `background-image:url(${this.bgImage})`
       }
     },
-    mounted(){
-      this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
+    created() {
+      this.probeType = 3
+      this.listenScroll = true
     },
-    methods:{
-      back(){
+    mounted() {
+      this.imageHeight = this.$refs.bgImage.clientHeight;
+      this.minTranslateY = -this.imageHeight
+      this.$refs.list.$el.style.top = `${this.imageHeight}px`
+    },
+    methods: {
+      back() {
         this.$router.back()
+      },
+      scroll(pos) {
+        this.scrollY = pos.y
+      }
+    },
+    watch: {
+      scrollY(newY) {
+        let translateY = Math.max(this.minTranslateY, newY) + RESERVED_HEIGHT
+        let zIndex = 0
+        this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`
+        this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`
+        if (newY < this.minTranslateY) {
+          zIndex = 10
+          this.$refs.bgImage.style.paddingTop = ZERO
+          this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
+        } else {
+          this.$refs.bgImage.style.paddingTop = '70%'
+          this.$refs.bgImage.style.height = ZERO
+        }
+        this.$refs.bgImage.style.zIndex = zIndex
       }
     }
   }
