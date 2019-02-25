@@ -22,7 +22,7 @@
             @scroll="scroll"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list @select="selectItem" :songs="songs"></song-list>
       </div>
       <div v-show="!songs.length" class="loading-container">
         <loading></loading>
@@ -36,6 +36,8 @@
   import SongList from "base/song-list/song-list";
   import Loading from "base/loading/loading";
   import {prefixStyle} from 'common/js/dom'
+  import {mapActions} from 'vuex'
+  import {selectPlay} from "../../store/actions";
 
   const RESERVED_HEIGHT = 40
   const ZERO = 0
@@ -86,7 +88,16 @@
       },
       scroll(pos) {
         this.scrollY = pos.y
-      }
+      },
+      selectItem(item,index){
+        this.selectPlay({
+          list:this.songs,
+          index
+        })
+      },
+      ...mapActions([
+        'selectPlay'
+      ])
     },
     watch: {
       scrollY(newY) {
