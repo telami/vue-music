@@ -393,12 +393,12 @@
           display: flex
           align-items: center
           width: 80%
-          margin: 0px auto
+          margin: 0 auto
           padding: 10px 0
           .time
             color: $color-text
             font-size: $font-size-small
-            flex: 0 0 30px
+            flex: 0 0 35px
             line-height: 30px
             width: 30px
             &.time-l
