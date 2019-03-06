@@ -45,12 +45,14 @@
         const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - progressBtnWidth, Math.max(0, this.touch.left + deltaX))
         this._offset(offsetWidth)
       },
-      progressTouchEnd(e) {
+      progressTouchEnd() {
         this.touch.initiated = false
         this._triggerPercent()
       },
       progressClick(e) {
-        this._offset(e.offsetX)
+        const rect = this.$refs.progressBar.getBoundingClientRect()
+        const offsetWidth = e.pageX - rect.left
+        this._offset(offsetWidth)
         this._triggerPercent()
       },
       _offset(offsetWidth) {
