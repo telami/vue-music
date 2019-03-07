@@ -12,7 +12,14 @@ export default new Router({
     {
       path: '/recommend',
       name: 'recommend',
-      component: () => import( 'components/recommend/recommend.vue')
+      component: () => import( 'components/recommend/recommend.vue'),
+      children: [
+        {
+          path:':id',
+          name:'disc',
+          component: () => import( 'components/disc/disc.vue')
+        }
+      ]
     },
     {
       path: '/rank',
